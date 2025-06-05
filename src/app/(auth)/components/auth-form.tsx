@@ -49,7 +49,7 @@ const LoginForm = ({
                       type="email"
                       placeholder="Email"
                       {...field}
-                      className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-2 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                      className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                     />
                   </FormControl>
                   <FormMessage className="text-xs" />
@@ -68,7 +68,7 @@ const LoginForm = ({
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...field}
-                        className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-2 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                        className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                       />
                       <button
                         type="button"
@@ -86,7 +86,7 @@ const LoginForm = ({
 
             <Link
               href="#"
-              className="outline-none no-underline text-main text-sm"
+              className="outline-none no-underline text-main text-xs"
             >
               FORGOT PASSWORD?
             </Link>
