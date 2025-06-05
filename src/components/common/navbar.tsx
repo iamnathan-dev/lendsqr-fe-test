@@ -58,16 +58,16 @@ export default function Navbar() {
               </Link>
             </div>
             <div className="hidden ml-10 lg:ml-40 sm:block">
-              <div className="flex lg:w-[400px] w-[300px] h-full">
+              <div className="flex lg:w-[400px] w-[300px]">
                 <Input
                   type="text"
                   placeholder="Search for anything"
                   className="!bg-transparent rounded-l-md !border-r-0 rounded-r-none w-full !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                 />
-                <Button className="!bg-main cursor-pointer text-white h-full rounded-l-none rounded-r-md !px-4">
+                <Button className="!bg-main cursor-pointer text-white rounded-l-none rounded-r-md !px-4 h-10">
                   <Search strokeWidth={1} />
                 </Button>
-              </div>
+              </div>{" "}
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:gap-8 gap-5 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
