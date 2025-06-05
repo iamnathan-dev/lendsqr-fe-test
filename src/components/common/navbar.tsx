@@ -20,6 +20,23 @@ const menuItems = [
 const commonLinkStyles =
   "block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden";
 
+const IconButton = ({
+  icon: Icon,
+  label,
+}: {
+  icon: React.ElementType;
+  label: string;
+}) => (
+  <button
+    type="button"
+    className="relative rounded-full bg-transparent text-custome outline-none cursor-pointer"
+  >
+    <span className="absolute -inset-1.5" />
+    <span className="sr-only">{label}</span>
+    <Icon strokeWidth={1} />
+  </button>
+);
+
 export default function Navbar() {
   return (
     <Disclosure
@@ -28,7 +45,6 @@ export default function Navbar() {
     >
       <div className="mx-auto max-w-screen px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-[70px] items-center justify-between">
-          <div className="absolute inset-y-0 left-0 flex items-center sm:hidden"></div>
           <div className="flex items-center justify-center sm:items-stretch sm:justify-start">
             <div className="flex shrink-0 items-center">
               <Link href="/" className="outline-none no-underline">
@@ -46,7 +62,7 @@ export default function Navbar() {
                 <Input
                   type="text"
                   placeholder="Search for anything"
-                  className="!bg-transparent rounded-l-md !border-r-0 rounded-r-none w-full !p-2 h-11 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                  className="!bg-transparent rounded-l-md !border-r-0 rounded-r-none w-full !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                 />
                 <Button className="!bg-main cursor-pointer text-white h-full rounded-l-none rounded-r-md !px-4">
                   <Search strokeWidth={1} />
@@ -58,22 +74,10 @@ export default function Navbar() {
             <Link href="#" className="outline-none underline text-custome">
               Docs
             </Link>
-            <button
-              type="button"
-              className="relative rounded-full bg-transparent text-custome outline-none cursor-pointer block md:hidden"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <Search strokeWidth={1} />
-            </button>
-            <button
-              type="button"
-              className="relative rounded-full bg-transparent text-custome outline-none cursor-pointer"
-            >
-              <span className="absolute -inset-1.5" />
-              <span className="sr-only">View notifications</span>
-              <Bell strokeWidth={1} />
-            </button>
+            <div className="block md:hidden">
+              <IconButton icon={Search} label="Search" />
+            </div>
+            <IconButton icon={Bell} label="View notifications" />
 
             <Menu as="div" className="relative">
               <MenuButton className="flex items-center space-x-1 cursor-pointer">

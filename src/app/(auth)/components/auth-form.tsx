@@ -15,6 +15,7 @@ import { loginSchema } from "../schema/auth-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { LoaderCircle } from "lucide-react";
 
 const LoginForm = ({
   onSubmit,
@@ -49,7 +50,7 @@ const LoginForm = ({
                       type="email"
                       placeholder="Email"
                       {...field}
-                      className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                      className="!bg-transparent rounded-sm !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                     />
                   </FormControl>
                   <FormMessage className="text-xs" />
@@ -68,7 +69,7 @@ const LoginForm = ({
                         type={showPassword ? "text" : "password"}
                         placeholder="Password"
                         {...field}
-                        className="!bg-transparent rounded-sm !p-2 h-11 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                        className="!bg-transparent rounded-sm !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
                       />
                       <button
                         type="button"
@@ -95,9 +96,12 @@ const LoginForm = ({
               size={"lg"}
               type="submit"
               disabled={loading}
-              className="w-full rounded-sm text-white cursor-pointer !bg-main focus-visible:ring-0"
+              className="w-full rounded-sm text-white flex flex-row gap-2 items-center cursor-pointer !bg-main focus-visible:ring-0"
             >
-              LOG IN
+              {loading && (
+                <LoaderCircle className="animate-spin" strokeWidth={1} />
+              )}{" "}
+              <div>LOG IN</div>
             </Button>
           </div>
         </form>
