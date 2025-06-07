@@ -73,7 +73,7 @@ const LoginForm = ({
                       />
                       <button
                         type="button"
-                        className="absolute right-3 outline-none top-1/2 -translate-y-1/2 cursor-pointer text-main text-xs "
+                        className="absolute right-3 font-medium outline-none top-1/2 -translate-y-1/2 cursor-pointer text-main text-xs "
                         onClick={() => setShowPassword(!showPassword)}
                       >
                         {showPassword ? "HIDE" : "SHOW"}
@@ -87,7 +87,7 @@ const LoginForm = ({
 
             <Link
               href="#"
-              className="outline-none no-underline text-main text-xs"
+              className="outline-none no-underline text-main font-medium text-xs"
             >
               FORGOT PASSWORD?
             </Link>
@@ -96,7 +96,7 @@ const LoginForm = ({
               size={"lg"}
               type="submit"
               disabled={loading}
-              className="w-full rounded-sm text-white flex flex-row gap-2 items-center cursor-pointer !bg-main focus-visible:ring-0"
+              className="w-full rounded-sm text-white flex flex-row gap-2 !font-medium items-center cursor-pointer !bg-main focus-visible:ring-0"
             >
               {loading && (
                 <LoaderCircle className="animate-spin" strokeWidth={1} />

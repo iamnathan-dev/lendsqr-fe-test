@@ -1,0 +1,23 @@
+.sidebar {
+  &::-webkit-scrollbar {
+    width: 5px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(155, 155, 155, 0.338);
+
+    &:hover {
+      background: rgba(155, 155, 155, 0.533);
+    }
+  }
+
+  .sidebar-accordion {
+    &::-webkit-scrollbar {
+      width: 0px;
+    }
+  }
+}

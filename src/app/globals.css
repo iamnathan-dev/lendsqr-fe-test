@@ -21,6 +21,7 @@
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
   --color-ring: var(--ring);
+  --color-minted: var(--minted);
   --color-input: var(--input);
   --color-border: var(--border);
   --color-destructive: var(--destructive);
@@ -61,6 +62,7 @@
   --main: oklch(0.725 0.147 184.704);
   --custome-secondary: oklch(0.444 0.052 264.326);
   --secondary: oklch(0.97 0 0);
+  --minted: oklch(0.445 0.035 264.326);
   --secondary-foreground: oklch(0.205 0 0);
   --muted: oklch(0.97 0 0);
   --muted-foreground: oklch(0.556 0 0);

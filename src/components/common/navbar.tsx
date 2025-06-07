@@ -10,6 +10,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { roboto, workSans } from "@/app/layout";
 
 const menuItems = [
   { href: "#", text: "Your Profile" },
@@ -27,21 +28,18 @@ const IconButton = ({
   icon: React.ElementType;
   label: string;
 }) => (
-  <button
-    type="button"
-    className="relative rounded-full bg-transparent text-custome outline-none cursor-pointer"
-  >
+  <div className="relative rounded-full text-custome outline-none cursor-pointer bg-transparent">
     <span className="absolute -inset-1.5" />
     <span className="sr-only">{label}</span>
     <Icon strokeWidth={1} />
-  </button>
+  </div>
 );
 
 export default function Navbar() {
   return (
     <Disclosure
       as="nav"
-      className="bg-white shadow-lg shadow-gray-100 fixed top-0 w-full z-50"
+      className="bg-white shadow-md shadow-gray-100 fixed top-0 w-full z-50"
     >
       <div className="mx-auto max-w-screen px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-[70px] items-center justify-between">
@@ -71,13 +69,16 @@ export default function Navbar() {
             </div>
           </div>
           <div className="absolute inset-y-0 right-0 flex items-center pr-2 md:gap-8 gap-5 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
-            <Link href="#" className="outline-none underline text-custome">
+            <Link
+              href="#"
+              className={`outline-none underline text-custome text-sm font-normal ${roboto.className}`}
+            >
               Docs
             </Link>
             <div className="block md:hidden">
               <IconButton icon={Search} label="Search" />
             </div>
-            <Menu as="div" className="relative">
+            <Menu as="div" className="relative flex items-center">
               <MenuButton>
                 <IconButton icon={Bell} label="View notifications" />
               </MenuButton>
@@ -93,13 +94,17 @@ export default function Navbar() {
 
             <Menu as="div" className="relative">
               <MenuButton className="flex items-center space-x-1 cursor-pointer">
-                <div className="relative flex rounded-full bg-gray-200 p-1 text-sm outline-none">
+                <div className="relative flex rounded-full bg-gray-100 p-1 text-sm outline-none">
                   <span className="absolute -inset-1.5" />
                   <span className="sr-only">Open user menu</span>
                   <User strokeWidth={1} />
                 </div>
-                <span className="ml-2 text-sm hidden md:flex font-medium text-custome">
-                  <div className="truncate max-w-[110px]">Adedeji</div>
+                <span className="ml-2 text-sm hidden md:flex text-custome">
+                  <div
+                    className={`truncate max-w-[110px] font-medium ${workSans.className}`}
+                  >
+                    Adedeji
+                  </div>
                   <ChevronDown strokeWidth={1} className="inline size-4" />
                 </span>
               </MenuButton>

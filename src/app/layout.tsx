@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
+import { Roboto, Work_Sans } from "next/font/google";
+import { Providers } from "./provider";
 
 const avenirNext = localFont({
   src: [
@@ -9,12 +11,39 @@ const avenirNext = localFont({
       weight: "400",
       style: "normal",
     },
+
+    {
+      path: "./fonts/avenir-medium.otf",
+      weight: "500",
+      style: "medium",
+    },
+
+    {
+      path: "./fonts/avenir-semibold.otf",
+      weight: "700",
+      style: "semibold",
+    },
+
     {
       path: "./fonts/avenir-bold.otf",
-      weight: "700",
-      style: "normal",
+      weight: "800",
+      style: "bold",
     },
   ],
+});
+
+export const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-roboto",
+});
+
+export const workSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-work-sans",
 });
 
 export const metadata: Metadata = {
@@ -29,7 +58,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${avenirNext.className} antialiased`}>{children}</body>
+      <body className={`${avenirNext.className} antialiased`}>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }
