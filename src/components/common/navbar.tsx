@@ -10,7 +10,8 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { roboto, workSans } from "@/app/layout";
+import { roboto } from "@/app/layout";
+import { workSans } from "@/lib/constants";
 
 const menuItems = [
   { href: "#", text: "Your Profile" },
@@ -60,7 +61,7 @@ export default function Navbar() {
                 <Input
                   type="text"
                   placeholder="Search for anything"
-                  className="!bg-transparent rounded-l-md !border-r-0 rounded-r-none w-full !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400"
+                  className={`!bg-transparent rounded-l-md !border-r-0 rounded-r-none w-full !p-2 h-10 shadow-none border-1 focus-visible:ring-0 focus-visible:border-main placeholder:text-gray-400 ${workSans.className} focus:outline-none`}
                 />
                 <Button className="!bg-main cursor-pointer text-white rounded-l-none rounded-r-md !px-4 h-10">
                   <Search strokeWidth={1} />

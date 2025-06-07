@@ -11,7 +11,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
     <>
       <Navbar />
       <Sidebar />
-      <main className="bg-[#FBFBFB] min-h-screen p-5 xl:p-10 md:ml-[250px] mt-[70px]">
+      <main className="bg-[#FBFBFB] min-h-screen h-full p-5 xl:p-10 md:ml-[250px] mt-[70px]">
         <div>{children}</div>
       </main>
     </>

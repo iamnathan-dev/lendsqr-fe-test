@@ -1,6 +1,6 @@
 "use client";
 
-import { SIDEBAR_LINKS } from "@/lib/constants";
+import { SIDEBAR_LINKS, workSans } from "@/lib/constants";
 import Link from "next/link";
 import React from "react";
 import {
@@ -20,8 +20,10 @@ const Sidebar: React.FC = () => {
   const orgId = searchParams.get("orgId");
 
   return (
-    <div className="fixed md:left-0 -left-[250px] top-[70px] h-[calc(100vh-70px)] sidebar w-[250px] bg-white shadow-2xl shadow-gray-100 overflow-y-auto z-40 py-5">
-      <Accordion type="single" collapsible className="w-full mb-4">
+    <div
+      className={`fixed md:left-0 -left-[250px] top-[70px] h-[calc(100vh-70px)] sidebar w-[250px] bg-white shadow-2xl shadow-gray-100 overflow-y-auto z-40 py-5 ${workSans.className}`}
+    >
+      <Accordion type="single" collapsible className={`w-full mb-4`}>
         <AccordionItem value="org-1">
           <AccordionTrigger className="flex items-center !shadow-none justify-normal gap-3 text-custome p-2 px-3 !no-underline rounded-none underline-none hover:bg-main/5 border-l-4 duration-200 ease-in border-l-transparent font-normal">
             <div>

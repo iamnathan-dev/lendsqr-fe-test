@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Roboto, Work_Sans } from "next/font/google";
+import { Roboto } from "next/font/google";
 import { Providers } from "./provider";
 
 const avenirNext = localFont({
@@ -37,13 +37,6 @@ export const roboto = Roboto({
   weight: ["400", "500", "700"],
   style: ["normal", "italic"],
   variable: "--font-roboto",
-});
-
-export const workSans = Work_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  variable: "--font-work-sans",
 });
 
 export const metadata: Metadata = {

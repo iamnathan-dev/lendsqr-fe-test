@@ -22,6 +22,7 @@ import {
   Users,
   UsersRound,
 } from "lucide-react";
+import { Work_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
 interface SidebarLink {
@@ -172,3 +173,10 @@ export const CARDS_DATA: CardData[] = [
     color: "bg-[#F55F44]/10 text-[#F55F44]",
   },
 ];
+
+export const workSans = Work_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-work-sans",
+});
