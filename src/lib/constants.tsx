@@ -1,26 +1,27 @@
 import {
   BarChart2,
-  Box,
   Briefcase,
   CheckCircle,
+  CircleDollarSign,
   ClipboardList,
-  CreditCard,
+  CoinsIcon,
   DollarSign,
-  FileText,
+  Files,
+  HandCoins,
+  Handshake,
+  Home,
   Layers,
-  LayoutDashboard,
   Package,
   Percent,
   PiggyBank,
   Repeat,
   Settings,
   Shield,
-  Sliders,
-  Star,
   Tag,
   UserCheck,
   Users,
   UsersRound,
+  UserX,
 } from "lucide-react";
 import { Work_Sans } from "next/font/google";
 import { ReactNode } from "react";
@@ -42,7 +43,7 @@ interface CardData {
 export const SIDEBAR_LINKS: SidebarLink[] = [
   {
     label: "Dashboard",
-    icon: <LayoutDashboard size={20} strokeWidth={1} />,
+    icon: <Home size={20} strokeWidth={1} />,
     href: "/dashboard",
   },
   // Customers
@@ -55,12 +56,12 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     label: "Loans",
-    icon: <CreditCard size={20} strokeWidth={1} />,
+    icon: <CircleDollarSign size={20} strokeWidth={1} />,
     href: "/loans",
   },
   {
     label: "Decision Models",
-    icon: <Sliders size={20} strokeWidth={1} />,
+    icon: <Handshake size={20} strokeWidth={1} />,
     href: "/decision-models",
   },
   {
@@ -70,7 +71,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     label: "Loan Requests",
-    icon: <FileText size={20} strokeWidth={1} />,
+    icon: <HandCoins size={20} strokeWidth={1} />,
     href: "/loan-requests",
   },
   {
@@ -78,7 +79,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
     icon: <CheckCircle size={20} strokeWidth={1} />,
     href: "/whitelist",
   },
-  { label: "Karma", icon: <Star size={20} strokeWidth={1} />, href: "/karma" },
+  { label: "Karma", icon: <UserX size={20} strokeWidth={1} />, href: "/karma" },
 
   // Businesses
   { section: "Businesses" },
@@ -89,7 +90,7 @@ export const SIDEBAR_LINKS: SidebarLink[] = [
   },
   {
     label: "Loan Products",
-    icon: <Box size={20} strokeWidth={1} />,
+    icon: <HandCoins size={20} strokeWidth={1} />,
     href: "/loan-products",
   },
   {
@@ -163,13 +164,13 @@ export const CARDS_DATA: CardData[] = [
   {
     title: "Users with loans",
     value: 12453,
-    icon: <UsersRound strokeWidth={1} size={20} />,
+    icon: <Files strokeWidth={1} size={20} />,
     color: "bg-[#F55F44]/10 text-[#F55F44]",
   },
   {
     title: "Users with savings",
     value: 102453,
-    icon: <UsersRound strokeWidth={1} size={20} />,
+    icon: <CoinsIcon strokeWidth={1} size={20} />,
     color: "bg-[#F55F44]/10 text-[#F55F44]",
   },
 ];

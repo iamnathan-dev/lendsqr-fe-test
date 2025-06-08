@@ -9,7 +9,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "../ui/accordion";
-import { Building } from "lucide-react";
+import { Briefcase } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import "../styles/sidebar.scss";
 
@@ -27,7 +27,7 @@ const Sidebar: React.FC = () => {
         <AccordionItem value="org-1">
           <AccordionTrigger className="flex items-center !shadow-none justify-normal gap-3 text-custome p-2 px-3 !no-underline rounded-none underline-none hover:bg-main/5 border-l-4 duration-200 ease-in border-l-transparent font-normal">
             <div>
-              <Building size={20} strokeWidth={1} />
+              <Briefcase size={20} strokeWidth={1} />
             </div>
             <span className="text-sm">Switch Organization</span>
           </AccordionTrigger>{" "}

@@ -25,7 +25,7 @@ const UsersList = () => {
               </div>
 
               <h4
-                className={`text-minted uppercase text-xs lg:text-[10px] xl:text-xs mt-4 ${workSans.className}`}
+                className={`text-minted uppercase text-xs font-medium lg:text-[10px] xl:text-xs mt-4 ${workSans.className}`}
               >
                 {item.title}
               </h4>

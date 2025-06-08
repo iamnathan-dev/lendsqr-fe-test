@@ -6,7 +6,6 @@ import {
   Table,
   TableBody,
   TableCell,
-  TableHead,
   TableHeader,
   TableRow,
 } from "../ui/table";
@@ -14,7 +13,6 @@ import {
   ChevronLeft,
   ChevronRight,
   Eye,
-  ListFilter,
   MoreVertical,
   UserCheck,
   Users,
@@ -45,6 +43,9 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
+import useUserStore from "@/app/(dashboard)/users/store/userStore";
+import TableHeaderCell from "./tableHeaderCell";
+import { Users as UsersType } from "@/app/action/getUsers";
 
 const tableHeaders = [
   "Organization",
@@ -63,17 +64,50 @@ const cellWidths = {
   dateJoined: "154px",
 };
 
+interface User {
+  organization: string;
+  username: string;
+  email: string;
+  phoneNumber: string;
+  dateJoined: string;
+  status: string;
+}
+
+const statusStyles = {
+  Active: "bg-green-100 text-green-500",
+  Blacklisted: "bg-red-100 text-pink-500",
+  Pending: "bg-yellow-100 text-yellow-500",
+  default: "bg-gray-100 text-gray-500",
+};
+
+const dropdownActions = [
+  { icon: Eye, label: "View Details" },
+  { icon: UserX, label: "Blacklist User" },
+  { icon: UserCheck, label: "Activate User" },
+];
+
 const UserTable = () => {
   const { data: users, isLoading } = useUserTable();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
-  const [localUsers, setLocalUsers] = useState(users || []);
+  const { setUsers, filterUsers } = useUserStore();
+
+  const filteredUsers = filterUsers();
+  const [localUsers, setLocalUsers] = useState<UsersType[]>([]);
+
+  const isEmpty = !isLoading && (!localUsers || localUsers.length === 0);
 
   useEffect(() => {
     if (users) {
-      setLocalUsers(users);
+      setUsers(users);
     }
-  }, [users]);
+  }, [users, setUsers]);
+
+  useEffect(() => {
+    if (filteredUsers) {
+      setLocalUsers(filteredUsers as unknown as UsersType[]);
+    }
+  }, [filteredUsers]);
 
   const totalPages = localUsers
     ? Math.ceil(localUsers.length / itemsPerPage)
@@ -83,23 +117,24 @@ const UserTable = () => {
   const currentUsers = localUsers?.slice(startIndex, endIndex);
 
   const handleStatusChange = (userId: string, action: string) => {
-    setLocalUsers((prevUsers) =>
+    setLocalUsers((prevUsers: UsersType[]) =>
       prevUsers.map((user) => {
         if (user.email === userId) {
-          let newStatus = user.status;
-          switch (action) {
-            case "Blacklist User":
-              newStatus = "Blacklisted";
-              break;
-            case "Activate User":
-              newStatus = "Active";
-              break;
-          }
-          return { ...user, status: newStatus };
+          const statusMap: Record<string, "Active" | "Blacklisted"> = {
+            "Blacklist User": "Blacklisted",
+            "Activate User": "Active",
+          };
+          return { ...user, status: statusMap[action] || user.status };
         }
         return user;
       })
     );
+  };
+
+  const handleItemsPerPageChange = (value: string) => {
+    const newItemsPerPage = Number(value);
+    setItemsPerPage(newItemsPerPage);
+    setCurrentPage(1);
   };
 
   const renderEmptyState = () => (
@@ -117,14 +152,7 @@ const UserTable = () => {
       <TableHeader>
         <TableRow className="!border-b-0 py-4 hover:bg-transparent">
           {tableHeaders.map((header) => (
-            <TableHead
-              className={`uppercase text-sm text-custome ${workSans.className}`}
-              key={header}
-            >
-              <div className="flex flex-row items-center gap-x-2">
-                {header} <ListFilter size={15} />
-              </div>
-            </TableHead>
+            <TableHeaderCell key={header} header={header} isLoading />
           ))}
         </TableRow>
       </TableHeader>
@@ -153,7 +181,7 @@ const UserTable = () => {
       <PaginationContent className="gap-1 sm:gap-2">
         <PaginationItem>
           <Button
-            size={"sm"}
+            size="sm"
             variant="outline"
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             className="h-6 w-6 sm:h-8 sm:w-8 border-0 !bg-gray-200 cursor-pointer shadow-none"
@@ -163,11 +191,14 @@ const UserTable = () => {
         </PaginationItem>
         {Array.from({ length: totalPages }).map((_, index) => {
           const pageNumber = index + 1;
-          if (
+          const isVisible =
             pageNumber === 1 ||
             pageNumber === totalPages ||
-            (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1)
-          ) {
+            (pageNumber >= currentPage - 1 && pageNumber <= currentPage + 1);
+          const showEllipsis =
+            pageNumber === currentPage - 2 || pageNumber === currentPage + 2;
+
+          if (isVisible) {
             return (
               <PaginationItem key={pageNumber}>
                 <PaginationLink
@@ -181,10 +212,7 @@ const UserTable = () => {
                 </PaginationLink>
               </PaginationItem>
             );
-          } else if (
-            pageNumber === currentPage - 2 ||
-            pageNumber === currentPage + 2
-          ) {
+          } else if (showEllipsis) {
             return (
               <PaginationItem key={pageNumber}>
                 <PaginationEllipsis className="text-xs sm:text-sm" />
@@ -196,7 +224,7 @@ const UserTable = () => {
         <PaginationItem>
           <Button
             variant="outline"
-            size={"sm"}
+            size="sm"
             onClick={() =>
               setCurrentPage((prev) => Math.min(prev + 1, totalPages))
             }
@@ -215,14 +243,7 @@ const UserTable = () => {
         <TableHeader>
           <TableRow className="!border-b-0 py-4 hover:bg-transparent">
             {tableHeaders.map((header) => (
-              <TableHead
-                className={`uppercase text-sm text-custome ${workSans.className}`}
-                key={header}
-              >
-                <div className="flex flex-row items-center gap-x-2">
-                  {header} <ListFilter size={15} />
-                </div>
-              </TableHead>
+              <TableHeaderCell key={header} header={header} />
             ))}
           </TableRow>
         </TableHeader>
@@ -235,21 +256,18 @@ const UserTable = () => {
               {Object.entries(cellWidths).map(([key, width]) => (
                 <TableCell
                   key={key}
-                  className={`truncate max-w-[${width}] py-4 !text-gray-400 ${workSans.className}`}
+                  style={{ maxWidth: width }}
+                  className={`truncate py-4 !text-gray-400 ${workSans.className}`}
                 >
-                  {user[key as keyof typeof user]}
+                  {user[key as keyof User]}
                 </TableCell>
               ))}
               <TableCell>
                 <span
                   className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                    user.status === "Active"
-                      ? "bg-green-100 text-green-500"
-                      : user.status === "Blacklisted"
-                      ? "bg-red-100 text-pink-500"
-                      : user.status === "Pending"
-                      ? "bg-yellow-100 text-yellow-500"
-                      : "bg-gray-100 text-gray-500"
+                    user.status in statusStyles
+                      ? statusStyles[user.status as keyof typeof statusStyles]
+                      : statusStyles.default
                   }`}
                 >
                   {user.status}
@@ -264,11 +282,7 @@ const UserTable = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    {[
-                      { icon: Eye, label: "View Details" },
-                      { icon: UserX, label: "Blacklist User" },
-                      { icon: UserCheck, label: "Activate User" },
-                    ].map(({ icon: Icon, label }) => (
+                    {dropdownActions.map(({ icon: Icon, label }) => (
                       <DropdownMenuItem
                         key={label}
                         onClick={() => handleStatusChange(user.email, label)}
@@ -279,7 +293,7 @@ const UserTable = () => {
                       </DropdownMenuItem>
                     ))}
                   </DropdownMenuContent>
-                </DropdownMenu>{" "}
+                </DropdownMenu>
               </TableCell>
             </TableRow>
           ))}
@@ -291,21 +305,20 @@ const UserTable = () => {
         >
           <span>Showing</span>
           <Select
-            onValueChange={(value) => {
-              setItemsPerPage(Number(value));
-              setCurrentPage(1);
-            }}
+            value={String(itemsPerPage)}
+            onValueChange={handleItemsPerPageChange}
           >
             <SelectTrigger className="w-fit !h-7 border-0 !bg-gray-200 cursor-pointer">
-              <SelectValue placeholder={itemsPerPage} />
+              <SelectValue>{itemsPerPage}</SelectValue>
             </SelectTrigger>
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Entries</SelectLabel>
-                <SelectItem value="10">10</SelectItem>
-                <SelectItem value="25">25</SelectItem>
-                <SelectItem value="50">50</SelectItem>
-                <SelectItem value="100">100</SelectItem>
+                {[10, 25, 50, 100].map((value) => (
+                  <SelectItem key={value} value={String(value)}>
+                    {value}
+                  </SelectItem>
+                ))}
               </SelectGroup>
             </SelectContent>
           </Select>
@@ -320,7 +333,7 @@ const UserTable = () => {
 
   return (
     <div className="w-full">
-      {localUsers && localUsers.length > 0
+      {localUsers && localUsers.length > 0 && !isEmpty
         ? renderUserTable()
         : renderEmptyState()}
     </div>
