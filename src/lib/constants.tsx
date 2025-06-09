@@ -23,7 +23,7 @@ import {
   UsersRound,
   UserX,
 } from "lucide-react";
-import { Work_Sans } from "next/font/google";
+import { Roboto, Work_Sans } from "next/font/google";
 import { ReactNode } from "react";
 
 interface SidebarLink {
@@ -175,9 +175,61 @@ export const CARDS_DATA: CardData[] = [
   },
 ];
 
+export const chartData = [
+  {
+    name: "Page A",
+    uv: 4000,
+    pv: 3400,
+    amt: 4400,
+  },
+  {
+    name: "Page B",
+    uv: 3000,
+    pv: 4398,
+    amt: 6210,
+  },
+  {
+    name: "Page C",
+    uv: 2000,
+    pv: 9800,
+    amt: 2290,
+  },
+  {
+    name: "Page D",
+    uv: 2780,
+    pv: 3908,
+    amt: 2000,
+  },
+  {
+    name: "Page E",
+    uv: 1890,
+    pv: 4800,
+    amt: 2181,
+  },
+  {
+    name: "Page F",
+    uv: 2390,
+    pv: 3800,
+    amt: 2500,
+  },
+  {
+    name: "Page G",
+    uv: 3490,
+    pv: 4300,
+    amt: 2100,
+  },
+];
+
 export const workSans = Work_Sans({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
   variable: "--font-work-sans",
+});
+
+export const roboto = Roboto({
+  subsets: ["latin"],
+  weight: ["400", "500", "700"],
+  style: ["normal", "italic"],
+  variable: "--font-roboto",
 });

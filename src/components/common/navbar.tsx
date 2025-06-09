@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Disclosure,
   Menu,
@@ -10,14 +12,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { roboto } from "@/app/layout";
-import { workSans } from "@/lib/constants";
-
-const menuItems = [
-  { href: "#", text: "Your Profile" },
-  { href: "#", text: "Settings" },
-  { href: "#", text: "Sign out" },
-];
+import { roboto, workSans } from "@/lib/constants";
 
 const commonLinkStyles =
   "block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden";
@@ -37,6 +32,15 @@ const IconButton = ({
 );
 
 export default function Navbar() {
+  const userData = localStorage.getItem("lendsqr-userData");
+  const userName = userData ? JSON.parse(userData).username : "";
+
+  const menuItems = [
+    { href: `/profile/${userName}`, text: "Your Profile" },
+    { href: "#", text: "Settings" },
+    { href: "#", text: "Sign out" },
+  ];
+
   return (
     <Disclosure
       as="nav"
@@ -104,7 +108,7 @@ export default function Navbar() {
                   <div
                     className={`truncate max-w-[110px] font-medium ${workSans.className}`}
                   >
-                    Adedeji
+                    {userName}
                   </div>
                   <ChevronDown strokeWidth={1} className="inline size-4" />
                 </span>

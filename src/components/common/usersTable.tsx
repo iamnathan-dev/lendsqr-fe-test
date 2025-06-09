@@ -46,6 +46,7 @@ import {
 import useUserStore from "@/app/(dashboard)/users/store/userStore";
 import TableHeaderCell from "./tableHeaderCell";
 import { Users as UsersType } from "@/app/action/getUsers";
+import { useRouter } from "next/navigation";
 
 const tableHeaders = [
   "Organization",
@@ -91,6 +92,7 @@ const UserTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
   const { setUsers, filterUsers } = useUserStore();
+  const router = useRouter();
 
   const filteredUsers = filterUsers();
   const [localUsers, setLocalUsers] = useState<UsersType[]>([]);
@@ -138,42 +140,49 @@ const UserTable = () => {
   };
 
   const renderEmptyState = () => (
-    <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
-      <Users strokeWidth={1} size={60} className="text-gray-500" />
-      <p className="text-lg font-medium text-gray-500">No users available</p>
-      <p className="text-sm text-gray-400">
-        Users will appear here once they are added to the system
-      </p>
+    <div className="rounded-sm shadow-lg shadow-gray-500/5 border border-gray-100 bg-white p-5 relative">
+      <div className="flex flex-col items-center justify-center min-h-[400px] space-y-4">
+        <Users strokeWidth={1} size={60} className="text-gray-500" />
+        <p className="text-lg font-medium text-gray-500">No users available</p>
+        <p className="text-sm text-gray-400">
+          Users will appear here once they are added to the system
+        </p>
+      </div>
     </div>
   );
 
   const renderSkeletonLoader = () => (
-    <Table>
-      <TableHeader>
-        <TableRow className="!border-b-0 py-4 hover:bg-transparent">
-          {tableHeaders.map((header) => (
-            <TableHeaderCell key={header} header={header} isLoading />
-          ))}
-        </TableRow>
-      </TableHeader>
-      <TableBody>
-        {Array.from({ length: itemsPerPage }).map((_, index) => (
-          <TableRow
-            key={index}
-            className="border-b-gray-100 hover:bg-transparent"
-          >
-            {Object.entries(cellWidths).map(([key, width]) => (
-              <TableCell key={key} className={`truncate max-w-[${width}] py-4`}>
+    <div className="rounded-sm shadow-lg shadow-gray-500/5 border border-gray-100 bg-white p-5 relative">
+      <Table>
+        <TableHeader>
+          <TableRow className="!border-b-0 py-4 hover:bg-transparent">
+            {tableHeaders.map((header) => (
+              <TableHeaderCell key={header} header={header} isLoading />
+            ))}
+          </TableRow>
+        </TableHeader>
+        <TableBody>
+          {Array.from({ length: itemsPerPage }).map((_, index) => (
+            <TableRow
+              key={index}
+              className="border-b-gray-100 hover:bg-transparent"
+            >
+              {Object.entries(cellWidths).map(([key, width]) => (
+                <TableCell
+                  key={key}
+                  className={`truncate max-w-[${width}] py-4`}
+                >
+                  <Skeleton className="h-4 w-full" />
+                </TableCell>
+              ))}
+              <TableCell>
                 <Skeleton className="h-4 w-full" />
               </TableCell>
-            ))}
-            <TableCell>
-              <Skeleton className="h-4 w-full" />
-            </TableCell>
-          </TableRow>
-        ))}
-      </TableBody>
-    </Table>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
+    </div>
   );
 
   const renderPagination = () => (
@@ -239,66 +248,72 @@ const UserTable = () => {
 
   const renderUserTable = () => (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow className="!border-b-0 py-4 hover:bg-transparent">
-            {tableHeaders.map((header) => (
-              <TableHeaderCell key={header} header={header} />
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {currentUsers?.map((user, index) => (
-            <TableRow
-              key={index}
-              className="border-b-gray-100 hover:bg-transparent"
-            >
-              {Object.entries(cellWidths).map(([key, width]) => (
-                <TableCell
-                  key={key}
-                  style={{ maxWidth: width }}
-                  className={`truncate py-4 !text-gray-400 ${workSans.className}`}
-                >
-                  {user[key as keyof User]}
-                </TableCell>
+      <div className="rounded-sm shadow-lg shadow-gray-500/5 border border-gray-100 bg-white p-5 relative">
+        <Table>
+          <TableHeader>
+            <TableRow className="!border-b-0 py-4 hover:bg-transparent">
+              {tableHeaders.map((header) => (
+                <TableHeaderCell key={header} header={header} />
               ))}
-              <TableCell>
-                <span
-                  className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                    user.status in statusStyles
-                      ? statusStyles[user.status as keyof typeof statusStyles]
-                      : statusStyles.default
-                  }`}
-                >
-                  {user.status}
-                </span>
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="h-8 w-8 p-0">
-                      <span className="sr-only">Open menu</span>
-                      <MoreVertical className="h-4 w-4" />
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    {dropdownActions.map(({ icon: Icon, label }) => (
-                      <DropdownMenuItem
-                        key={label}
-                        onClick={() => handleStatusChange(user.email, label)}
-                        className={`!text-custome ${workSans.className}`}
-                      >
-                        <Icon className="mr-2 h-4 w-4" />
-                        {label}
-                      </DropdownMenuItem>
-                    ))}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {currentUsers?.map((user, index) => (
+              <TableRow
+                key={index}
+                className="border-b-gray-100 hover:bg-transparent"
+              >
+                {Object.entries(cellWidths).map(([key, width]) => (
+                  <TableCell
+                    key={key}
+                    style={{ maxWidth: width }}
+                    className={`truncate py-4 !text-gray-400 ${workSans.className}`}
+                  >
+                    {user[key as keyof User]}
+                  </TableCell>
+                ))}
+                <TableCell>
+                  <span
+                    className={`px-3 py-1.5 rounded-full text-xs font-medium ${
+                      user.status in statusStyles
+                        ? statusStyles[user.status as keyof typeof statusStyles]
+                        : statusStyles.default
+                    }`}
+                  >
+                    {user.status}
+                  </span>
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <span className="sr-only">Open menu</span>
+                        <MoreVertical className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      {dropdownActions.map(({ icon: Icon, label }) => (
+                        <DropdownMenuItem
+                          key={label}
+                          onClick={() =>
+                            label === "View Details"
+                              ? router.push(`/profile/${user.username}`)
+                              : handleStatusChange(user.email, label)
+                          }
+                          className={`!text-custome ${workSans.className}`}
+                        >
+                          <Icon className="mr-2 h-4 w-4" />
+                          {label}
+                        </DropdownMenuItem>
+                      ))}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
       <div className="flex lg:flex-row flex-col items-center justify-between">
         <div
           className={`flex flex-row gap-x-3 items-center text-sm text-gray-500 ${workSans.className}`}

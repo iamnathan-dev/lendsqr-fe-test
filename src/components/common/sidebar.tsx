@@ -12,12 +12,17 @@ import {
 import { Briefcase } from "lucide-react";
 import { usePathname, useSearchParams } from "next/navigation";
 import "../styles/sidebar.scss";
+import useUserStore from "@/app/(dashboard)/users/store/userStore";
 
 const Sidebar: React.FC = () => {
   const currentPath = usePathname();
   const searchParams = useSearchParams();
 
-  const orgId = searchParams.get("orgId");
+  const organization = searchParams.get("organization");
+
+  const { users } = useUserStore();
+
+  const organizations = [...users.map((user) => user)];
 
   return (
     <div
@@ -32,24 +37,23 @@ const Sidebar: React.FC = () => {
             <span className="text-sm">Switch Organization</span>
           </AccordionTrigger>{" "}
           <AccordionContent className="flex flex-col border-l-2 sidebar-accordion  border-l-gray-300 ml-5 pl-4 max-h-[200px] overflow-y-auto">
-            {[
-              { label: "Organization 1", id: "1" },
-              { label: "Organization 2", id: "2" },
-            ].map((org, index) => (
+            {organizations.map((org, index) => (
               <Link
                 key={index}
                 href={{
-                  pathname: "/dashboard",
-                  query: { orgId: org.id },
+                  pathname: "/users",
+                  query: { organization: org.organization },
                 }}
                 className="flex items-center gap-3 text-custome p-2 px-3 cursor-pointer"
               >
                 <span
                   className={`text-sm duration-200 ease-in hover:text-main ${
-                    orgId === org.id ? "text-main" : "text-gray-500"
+                    organization === org.organization
+                      ? "text-main"
+                      : "text-gray-500"
                   }`}
                 >
-                  {org.label}
+                  {org.organization}
                 </span>
               </Link>
             ))}

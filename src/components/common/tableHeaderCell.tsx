@@ -18,25 +18,36 @@ import { Input } from "../ui/input";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Calendar } from "../ui/calendar";
 import useUserStore from "@/app/(dashboard)/users/store/userStore";
-import { useDebounce } from "use-debounce";
+import { useState } from "react";
 
-const TableHeaderCell = ({
-  header,
-  isLoading,
-}: {
+interface FilterField {
+  label: string;
+  type: "select" | "date" | "text" | "email" | "tel";
+  placeholder?: string;
+  options?: string[];
+}
+
+interface TableHeaderCellProps {
   header: string;
   isLoading?: boolean;
+}
+
+const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
+  header,
+  isLoading,
 }) => {
   const { setQuery, filterUsers, users } = useUserStore();
-  const [debouncedQuery] = useDebounce(setQuery, 1000);
+  const [tempQuery, setTempQuery] = useState<string[]>([]);
 
-  const filterFields = [
+  const uniqueOrganizations = Array.from(
+    new Set(users?.map((user) => user?.organization).filter(Boolean))
+  );
+
+  const filterFields: FilterField[] = [
     {
       label: "Organization",
       type: "select",
-      options: [
-        ...new Set(users.map((user) => user.organization).filter(Boolean)),
-      ],
+      options: uniqueOrganizations,
       placeholder: "Select organization",
     },
     { label: "Username", type: "text", placeholder: "Enter username" },
@@ -51,8 +62,93 @@ const TableHeaderCell = ({
   ];
 
   const handleFilter = () => {
-    filterUsers();
+    try {
+      setQuery(tempQuery);
+      filterUsers();
+    } catch (error) {
+      console.error("Error filtering users:", error);
+    }
   };
+
+  const renderFilterInput = (field: FilterField) => {
+    const commonInputProps = {
+      onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
+        setTempQuery([...tempQuery, e.target.value]),
+      className: `w-full !bg-transparent shadow-none !focus-visible:ring-0 border-gray-200 hover:border-gray-300 ${workSans.className} text-sm text-gray-500`,
+    };
+
+    switch (field.type) {
+      case "select":
+        return (
+          <Select onValueChange={(val) => setTempQuery([...tempQuery, val])}>
+            <SelectTrigger className="w-full !bg-transparent shadow-none border-gray-200 hover:border-gray-300 !focus-visible:ring-0">
+              <SelectValue
+                placeholder="Select"
+                className={`!text-custome ${workSans.className}`}
+              />
+            </SelectTrigger>
+            <SelectContent className="bg-white">
+              {field.options?.map((option) => (
+                <SelectItem
+                  key={option}
+                  value={option.toLowerCase()}
+                  className={`hover:bg-gray-50 text-sm ${workSans.className} !text-custome`}
+                >
+                  {option}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        );
+      case "date":
+        return (
+          <div className="relative flex gap-2">
+            <Input
+              type="text"
+              placeholder="Select date"
+              {...commonInputProps}
+            />
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant="ghost"
+                  className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
+                >
+                  <CalendarIcon className="size-3.5" />
+                  <span className="sr-only">Select date</span>
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent
+                className="w-auto overflow-hidden p-0"
+                align="end"
+                alignOffset={-8}
+                sideOffset={10}
+              >
+                <Calendar
+                  mode="single"
+                  className="rounded-md border"
+                  onSelect={(date) =>
+                    setTempQuery(
+                      date ? [...tempQuery, date.toISOString()] : tempQuery
+                    )
+                  }
+                />
+              </PopoverContent>
+            </Popover>
+          </div>
+        );
+      default:
+        return (
+          <Input
+            type={field.type}
+            placeholder={field.placeholder}
+            {...commonInputProps}
+          />
+        );
+    }
+  };
+
+  const buttonClassName = `px-6 ${workSans.className} rounded-md cursor-pointer w-full`;
 
   return (
     <TableHead
@@ -77,88 +173,30 @@ const TableHeaderCell = ({
               align="center"
             >
               <div className="space-y-3">
-                {filterFields.map(({ label, type, placeholder, options }) => (
-                  <div key={label} className="space-y-2">
+                {filterFields.map((field) => (
+                  <div key={field.label} className="space-y-2">
                     <label
                       className={`text-sm font-medium text-custome ${workSans.className}`}
                     >
-                      {label}
+                      {field.label}
                     </label>
-                    {type === "select" ? (
-                      <Select onValueChange={debouncedQuery}>
-                        <SelectTrigger className="w-full !bg-transparent shadow-none border-gray-200 hover:border-gray-300 !focus-visible:ring-0">
-                          <SelectValue
-                            placeholder={`Select`}
-                            className={`!text-custome ${workSans.className}`}
-                          />
-                        </SelectTrigger>
-                        <SelectContent className="bg-white">
-                          {options?.map((option) => (
-                            <SelectItem
-                              key={option}
-                              value={option.toLowerCase()}
-                              className={`hover:bg-gray-50 text-sm ${workSans.className} !text-custome`}
-                            >
-                              {option}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    ) : type === "date" ? (
-                      <div className="relative flex gap-2">
-                        <Input
-                          type="text"
-                          placeholder="Select date"
-                          onChange={(e) => debouncedQuery(e.target.value)}
-                          className={`w-full !bg-transparent shadow-none !focus-visible:ring-0 border-gray-200 hover:border-gray-300 ${workSans.className} text-sm text-gray-500`}
-                        />
-                        <Popover>
-                          <PopoverTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              className="absolute top-1/2 right-2 size-6 -translate-y-1/2"
-                            >
-                              <CalendarIcon className="size-3.5" />
-                              <span className="sr-only">Select date</span>
-                            </Button>
-                          </PopoverTrigger>
-                          <PopoverContent
-                            className="w-auto overflow-hidden p-0"
-                            align="end"
-                            alignOffset={-8}
-                            sideOffset={10}
-                          >
-                            <Calendar
-                              mode="single"
-                              className="rounded-md border"
-                              onSelect={(date) =>
-                                debouncedQuery(date ? date.toISOString() : "")
-                              }
-                            />
-                          </PopoverContent>
-                        </Popover>
-                      </div>
-                    ) : (
-                      <Input
-                        type={type}
-                        placeholder={placeholder}
-                        onChange={(e) => debouncedQuery(e.target.value)}
-                        className={`w-full !bg-transparent shadow-none !focus-visible:ring-0 border-gray-200 hover:border-gray-300 ${workSans.className} text-sm text-gray-500`}
-                      />
-                    )}
+                    {renderFilterInput(field)}
                   </div>
                 ))}
                 <div className="grid grid-cols-2 gap-x-2 !mt-8">
                   <Button
                     variant="outline"
-                    onClick={() => debouncedQuery("")}
-                    className={`px-6 ${workSans.className} rounded-md cursor-pointer !text-custome !border-custome !bg-transparent w-full`}
+                    onClick={() => {
+                      setTempQuery([]);
+                      setQuery([]);
+                    }}
+                    className={`${buttonClassName} !text-custome !border-custome !bg-transparent`}
                   >
                     Reset
                   </Button>
                   <Button
                     onClick={handleFilter}
-                    className={`px-6 !bg-main text-white rounded-md cursor-pointer w-full ${workSans.className}`}
+                    className={`${buttonClassName} !bg-main text-white`}
                   >
                     Filter
                   </Button>
