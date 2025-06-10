@@ -36,7 +36,7 @@ interface SidebarLink {
 interface CardData {
   title: string;
   value: number;
-  icon: React.ReactNode;
+  icon: React.ReactNode | string;
   color: string;
 }
 

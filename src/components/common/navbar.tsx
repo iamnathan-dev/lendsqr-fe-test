@@ -7,7 +7,8 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { AlignJustify, Bell, ChevronDown, Search, User } from "lucide-react";
+import { AlignJustify, ChevronDown, Search, User } from "lucide-react";
+import Notification from "@/shared/assets/svg/notification.svg";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
@@ -98,8 +99,13 @@ export default function Navbar() {
               <IconButton icon={Search} label="Search" />
             </div>
             <Menu as="div" className="relative flex items-center">
-              <MenuButton>
-                <IconButton icon={Bell} label="View notifications" />
+              <MenuButton className={"cursor-pointer"}>
+                <Image
+                  src={Notification}
+                  alt="notification"
+                  width={20}
+                  height={20}
+                />
               </MenuButton>
               <MenuItems
                 transition
