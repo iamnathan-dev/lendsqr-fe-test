@@ -50,9 +50,6 @@ importers:
       lucide-react:
         specifier: ^0.513.0
         version: 0.513.0(react@19.1.0)
-      next:
-        specifier: 15.3.3
-        version: 15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.1)
       next-themes:
         specifier: ^0.4.6
         version: 0.4.6(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
@@ -144,6 +141,15 @@ importers:
       jest-environment-jsdom:
         specifier: ^30.0.0
         version: 30.0.0
+      jest-transform-stub:
+        specifier: ^2.0.0
+        version: 2.0.0
+      jsdom:
+        specifier: ^26.1.0
+        version: 26.1.0
+      next:
+        specifier: 15.3.3
+        version: 15.3.3(@babel/core@7.27.4)(react-dom@19.1.0(react@19.1.0))(react@19.1.0)(sass@1.89.1)
       postcss:
         specifier: ^8.5.4
         version: 8.5.4
@@ -3344,6 +3350,9 @@ packages:
   jest-snapshot@30.0.0:
     resolution: {integrity: sha512-6oCnzjpvfj/UIOMTqKZ6gedWAUgaycMdV8Y8h2dRJPvc2wSjckN03pzeoonw8y33uVngfx7WMo1ygdRGEKOT7w==}
     engines: {node: ^18.14.0 || ^20.0.0 || ^22.0.0 || >=24.0.0}
+
+  jest-transform-stub@2.0.0:
+    resolution: {integrity: sha512-lspHaCRx/mBbnm3h4uMMS3R5aZzMwyNpNIJLXj4cEsV0mIUtS4IjYJLSoyjRCtnxb6RIGJ4NL2quZzfIeNhbkg==}
 
   jest-util@29.7.0:
     resolution: {integrity: sha512-z6EbKajIpqGKU56y5KBUgy1dt1ihhQJgWzUlZHArA/+X2ad7Cb5iF+AK1EWVL/Bo7Rz9uurpqw6SiBCefUbCGA==}
@@ -8135,6 +8144,8 @@ snapshots:
       synckit: 0.11.8
     transitivePeerDependencies:
       - supports-color
+
+  jest-transform-stub@2.0.0: {}
 
   jest-util@29.7.0:
     dependencies:

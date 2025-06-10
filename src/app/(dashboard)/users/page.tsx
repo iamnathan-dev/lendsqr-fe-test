@@ -1,8 +1,9 @@
 import TableContainer from "@/components/common/tableContainer";
+import { RenderSkeletonLoader } from "@/components/common/tableSkeleton";
 import UserTable from "@/components/common/usersTable";
 import { Card, CardContent } from "@/components/ui/card";
 import { CARDS_DATA, workSans } from "@/lib/constants";
-import React from "react";
+import React, { Suspense } from "react";
 
 const UsersList = () => {
   return (
@@ -41,7 +42,9 @@ const UsersList = () => {
 
       <div className="mt-8">
         <TableContainer>
-          <UserTable />
+          <Suspense fallback={<RenderSkeletonLoader />}>
+            <UserTable />
+          </Suspense>
         </TableContainer>
       </div>
     </div>

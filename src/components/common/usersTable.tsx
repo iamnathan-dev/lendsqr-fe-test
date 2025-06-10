@@ -47,8 +47,9 @@ import {
 import useUserStore from "@/app/(dashboard)/users/store/userStore";
 import TableHeaderCell from "./tableHeaderCell";
 import { Users as UsersType } from "@/app/action/getUsers";
+import { RenderSkeletonLoader } from "./tableSkeleton";
 
-const TABLE_HEADERS = [
+export const TABLE_HEADERS = [
   "Organization",
   "Username",
   "Email",
@@ -57,7 +58,7 @@ const TABLE_HEADERS = [
   "Status",
 ];
 
-const CELL_WIDTHS = {
+export const CELL_WIDTHS = {
   organization: "116px",
   username: "106px",
   email: "147px",
@@ -186,40 +187,6 @@ const UserTable = () => {
           Users will appear here once they are added to the system
         </p>
       </div>
-    </div>
-  );
-
-  const renderSkeletonLoader = () => (
-    <div className="rounded-sm shadow-lg shadow-gray-500/5 border border-gray-100 bg-white p-5 relative">
-      <Table>
-        <TableHeader>
-          <TableRow className="!border-b-0 py-4 hover:bg-transparent">
-            {TABLE_HEADERS.map((header) => (
-              <TableHeaderCell key={header} header={header} isLoading />
-            ))}
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {Array.from({ length: itemsPerPage }).map((_, index) => (
-            <TableRow
-              key={index}
-              className="border-b-gray-100 hover:bg-transparent"
-            >
-              {Object.entries(CELL_WIDTHS).map(([key, width]) => (
-                <TableCell
-                  key={key}
-                  className={`truncate max-w-[${width}] py-4`}
-                >
-                  <Skeleton className="h-4 w-full" />
-                </TableCell>
-              ))}
-              <TableCell>
-                <Skeleton className="h-4 w-full" />
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
     </div>
   );
 
@@ -375,7 +342,7 @@ const UserTable = () => {
     </>
   );
 
-  if (isLoading) return renderSkeletonLoader();
+  if (isLoading) return <RenderSkeletonLoader />;
 
   return (
     <div className="w-full">

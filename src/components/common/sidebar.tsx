@@ -2,7 +2,7 @@
 
 import { SIDEBAR_LINKS, workSans } from "@/lib/constants";
 import Link from "next/link";
-import React from "react";
+import React, { Suspense } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -15,7 +15,7 @@ import "../styles/sidebar.scss";
 import useUserStore from "@/app/(dashboard)/users/store/userStore";
 import { useSidebarStore } from "@/store/globalStore";
 
-const Sidebar: React.FC = () => {
+const SidebarContent = () => {
   const currentPath = usePathname();
   const searchParams = useSearchParams();
   const organization = searchParams.get("organization");
@@ -116,6 +116,14 @@ const Sidebar: React.FC = () => {
         </div>
       ))}{" "}
     </div>
+  );
+};
+
+const Sidebar: React.FC = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SidebarContent />
+    </Suspense>
   );
 };
 

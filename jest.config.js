@@ -1,9 +1,15 @@
-import { createDefaultPreset } from "ts-jest";
-
-const tsJestTransformCfg = createDefaultPreset().transform;
-
-/** @type {import("jest").Config} **/
-export const testEnvironment = "node";
-export const transform = {
-  ...tsJestTransformCfg,
+/** @type {import('jest').Config} */
+const config = {
+  preset: "ts-jest",
+  testEnvironment: "jsdom",
+  transform: {
+    "^.+\\.(ts|tsx)$": "ts-jest",
+  },
+  moduleFileExtensions: ["ts", "tsx", "js", "jsx"],
+  transformIgnorePatterns: [
+    "/node_modules/(?!@tanstack|@testing-library).+\\.js$",
+  ],
+  setupFilesAfterEnv: ["<rootDir>/jest.setup.ts"],
 };
+
+module.exports = config;

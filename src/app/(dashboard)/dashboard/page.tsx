@@ -3,10 +3,15 @@
 import { Card, CardContent } from "@/components/ui/card";
 import { CARDS_DATA, chartData, workSans } from "@/lib/constants";
 import { AreaChart, Area, Tooltip, ResponsiveContainer } from "recharts";
+import { useEffect, useState } from "react";
 
 const Dashboard = () => {
-  const userData = localStorage.getItem("lendsqr-userData");
-  const userName = userData ? JSON.parse(userData).username : "";
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const userData = localStorage.getItem("lendsqr-userData");
+    setUserName(userData ? JSON.parse(userData).username : "");
+  }, []);
 
   return (
     <div>
