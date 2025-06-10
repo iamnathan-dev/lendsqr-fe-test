@@ -36,8 +36,8 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
   header,
   isLoading,
 }) => {
-  const { setQuery, filterUsers, users } = useUserStore();
-  const [tempQuery, setTempQuery] = useState<string[]>([]);
+  const { setQuery, users } = useUserStore();
+  const [tempQuery, setTempQuery] = useState<Record<string, string>>({});
 
   const uniqueOrganizations = Array.from(
     new Set(users?.map((user) => user?.organization).filter(Boolean))
@@ -57,30 +57,48 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
     {
       label: "Status",
       type: "select",
-      options: ["Active", "Inactive", "Pending"],
+      options: ["Active", "Inactive", "Pending", "Blacklisted"],
     },
   ];
 
   const handleFilter = () => {
     try {
-      setQuery(tempQuery);
-      filterUsers();
+      const queryArray = Object.values(tempQuery).filter(
+        (value) => value && value.trim() !== ""
+      );
+      setQuery(queryArray);
     } catch (error) {
       console.error("Error filtering users:", error);
     }
   };
 
+  const handleReset = () => {
+    setTempQuery({});
+    setQuery([]);
+  };
+
+  const handleInputChange = (fieldLabel: string, value: string) => {
+    setTempQuery((prev) => ({
+      ...prev,
+      [fieldLabel]: value,
+    }));
+  };
+
   const renderFilterInput = (field: FilterField) => {
     const commonInputProps = {
+      value: tempQuery[field.label] || "",
       onChange: (e: React.ChangeEvent<HTMLInputElement>) =>
-        setTempQuery([...tempQuery, e.target.value]),
+        handleInputChange(field.label, e.target.value),
       className: `w-full !bg-transparent shadow-none !focus-visible:ring-0 border-gray-200 hover:border-gray-300 ${workSans.className} text-sm text-gray-500`,
     };
 
     switch (field.type) {
       case "select":
         return (
-          <Select onValueChange={(val) => setTempQuery([...tempQuery, val])}>
+          <Select
+            value={tempQuery[field.label] || ""}
+            onValueChange={(val) => handleInputChange(field.label, val)}
+          >
             <SelectTrigger className="w-full !bg-transparent shadow-none border-gray-200 hover:border-gray-300 !focus-visible:ring-0">
               <SelectValue
                 placeholder="Select"
@@ -107,6 +125,7 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
               type="text"
               placeholder="Select date"
               {...commonInputProps}
+              readOnly
             />
             <Popover>
               <PopoverTrigger asChild>
@@ -128,8 +147,9 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
                   mode="single"
                   className="rounded-md border"
                   onSelect={(date) =>
-                    setTempQuery(
-                      date ? [...tempQuery, date.toISOString()] : tempQuery
+                    handleInputChange(
+                      field.label,
+                      date ? date.toISOString().split("T")[0] : ""
                     )
                   }
                 />
@@ -186,10 +206,7 @@ const TableHeaderCell: React.FC<TableHeaderCellProps> = ({
                 <div className="grid grid-cols-2 gap-x-2 !mt-8">
                   <Button
                     variant="outline"
-                    onClick={() => {
-                      setTempQuery([]);
-                      setQuery([]);
-                    }}
+                    onClick={handleReset}
                     className={`${buttonClassName} !text-custome !border-custome !bg-transparent`}
                   >
                     Reset

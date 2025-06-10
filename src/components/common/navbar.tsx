@@ -7,13 +7,14 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { Bell, ChevronDown, Search, User } from "lucide-react";
+import { AlignJustify, Bell, ChevronDown, Search, User } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { roboto, workSans } from "@/lib/constants";
 import { useEffect, useState } from "react";
+import { useSidebarStore } from "@/store/globalStore";
 
 const commonLinkStyles =
   "block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden";
@@ -34,6 +35,7 @@ const IconButton = ({
 
 export default function Navbar() {
   const [userName, setUserName] = useState("");
+  const { toggleSidebar } = useSidebarStore();
 
   useEffect(() => {
     const userData = localStorage.getItem("lendsqr-userData");
@@ -54,6 +56,13 @@ export default function Navbar() {
       <div className="mx-auto max-w-screen px-2 sm:px-6 lg:px-8">
         <div className="relative flex h-[70px] items-center justify-between">
           <div className="flex items-center justify-center sm:items-stretch sm:justify-start">
+            <Button
+              variant={"outline"}
+              className="md:hidden md:mr-0 mr-3"
+              onClick={() => toggleSidebar()}
+            >
+              <AlignJustify strokeWidth={1} />
+            </Button>{" "}
             <div className="flex shrink-0 items-center">
               <Link href="/" className="outline-none no-underline">
                 <Image

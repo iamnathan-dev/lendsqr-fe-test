@@ -37,7 +37,7 @@ const useUserStore = create<UserState>((set, get) => {
       }
 
       const filteredUsers = users.filter((user) => {
-        return query.some((searchTerm) => {
+        return query.some((searchTerm: string) => {
           const lowercaseSearchTerm = (searchTerm || "").toLowerCase();
           return (
             user.organization?.toLowerCase().includes(lowercaseSearchTerm) ||
@@ -45,7 +45,7 @@ const useUserStore = create<UserState>((set, get) => {
             user.email?.toLowerCase().includes(lowercaseSearchTerm) ||
             user.phoneNumber?.toLowerCase().includes(lowercaseSearchTerm) ||
             user.dateJoined?.toLowerCase().includes(lowercaseSearchTerm) ||
-            user.status?.toLowerCase().includes(lowercaseSearchTerm)
+            user.status?.toLowerCase() === lowercaseSearchTerm
           );
         });
       });

@@ -1,7 +1,7 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useEffect, useState, useMemo } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUserTable } from "../../app/hook/useUsersTable";
 import {
   Table,
@@ -92,25 +92,58 @@ interface User {
 const UserTable = () => {
   const router = useRouter();
   const { data: users, isLoading } = useUserTable();
-  const { setUsers, filterUsers } = useUserStore();
+  const { users: storeUsers, setUsers, query } = useUserStore();
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_OPTIONS[0]);
   const [localUsers, setLocalUsers] = useState<UsersType[]>([]);
 
-  const filteredUsers = filterUsers();
+  const searchParams = useSearchParams();
+
+  const filteredUsers = useMemo(() => {
+    if (query.length === 0) {
+      return storeUsers;
+    }
+
+    return storeUsers.filter((user) => {
+      return query.some((searchTerm) => {
+        const lowercaseSearchTerm = (searchTerm || "").toLowerCase();
+        return (
+          user.organization?.toLowerCase().includes(lowercaseSearchTerm) ||
+          user.username?.toLowerCase().includes(lowercaseSearchTerm) ||
+          user.email?.toLowerCase().includes(lowercaseSearchTerm) ||
+          user.phoneNumber?.toLowerCase().includes(lowercaseSearchTerm) ||
+          user.dateJoined?.toLowerCase().includes(lowercaseSearchTerm) ||
+          user.status?.toLowerCase() === lowercaseSearchTerm
+        );
+      });
+    });
+  }, [storeUsers, query]);
+
+  useEffect(() => {
+    if (users && users.length > 0) {
+      setUsers(users);
+    }
+  }, [users, setUsers]);
+
+  useEffect(() => {
+    const orgFilter = searchParams.get("organization");
+
+    if (orgFilter && filteredUsers.length > 0) {
+      const decodedOrg = decodeURIComponent(orgFilter);
+      const filtered = filteredUsers.filter(
+        (user) => user.organization === decodedOrg
+      );
+      setLocalUsers(filtered as unknown as UsersType[]);
+    } else if (filteredUsers.length > 0) {
+      setLocalUsers(filteredUsers as unknown as UsersType[]);
+    }
+  }, [filteredUsers, searchParams]);
+
   const isEmpty = !isLoading && (!localUsers || localUsers.length === 0);
   const totalPages = Math.ceil((localUsers?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentUsers = localUsers?.slice(startIndex, endIndex);
-
-  useEffect(() => {
-    if (users) setUsers(users);
-  }, [users, setUsers]);
-
-  useEffect(() => {
-    if (filteredUsers) setLocalUsers(filteredUsers as unknown as UsersType[]);
-  }, [filteredUsers]);
 
   const handleStatusChange = (userId: string, action: string) => {
     const statusMap: Record<string, "Active" | "Blacklisted"> = {
