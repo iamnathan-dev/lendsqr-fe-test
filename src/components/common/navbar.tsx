@@ -13,6 +13,7 @@ import Link from "next/link";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { roboto, workSans } from "@/lib/constants";
+import { useEffect, useState } from "react";
 
 const commonLinkStyles =
   "block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden";
@@ -32,8 +33,12 @@ const IconButton = ({
 );
 
 export default function Navbar() {
-  const userData = localStorage.getItem("lendsqr-userData");
-  const userName = userData ? JSON.parse(userData).username : "";
+  const [userName, setUserName] = useState("");
+
+  useEffect(() => {
+    const userData = localStorage.getItem("lendsqr-userData");
+    setUserName(userData ? JSON.parse(userData).username : "");
+  }, []);
 
   const menuItems = [
     { href: `/profile/${userName}`, text: "Your Profile" },

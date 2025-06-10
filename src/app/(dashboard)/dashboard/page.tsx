@@ -54,7 +54,7 @@ const Dashboard = () => {
               Monthly User Activity
             </h3>
           </div>
-          <div className="w-full h-[64vh]">
+          <div className="w-full h-[300px] lg:h-[400px]">
             <ResponsiveContainer width="103%" height="100%">
               <AreaChart
                 width={500}

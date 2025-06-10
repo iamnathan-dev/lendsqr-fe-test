@@ -3,6 +3,7 @@ import localFont from "next/font/local";
 import "./globals.css";
 import "@/components/styles/global.scss";
 import { Providers } from "./provider";
+import { Toaster } from "@/components/ui/sonner";
 
 const avenirNext = localFont({
   src: [
@@ -46,6 +47,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${avenirNext.className} antialiased`}>
         <Providers>{children}</Providers>
+        <Toaster position="top-center" />
       </body>
     </html>
   );

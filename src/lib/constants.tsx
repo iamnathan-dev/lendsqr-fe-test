@@ -233,3 +233,41 @@ export const roboto = Roboto({
   style: ["normal", "italic"],
   variable: "--font-roboto",
 });
+
+export const userData = {
+  tier: "User's Tier",
+  rating: 2,
+  balance: "₦200,000.00",
+  bankBalance: "₦200,000.00",
+  avatar: null,
+  personal: {
+    fullName: "Grace Effiom",
+    phoneNumber: "07060780922",
+    email: "grace@gmail.com",
+    bvn: "07824591630",
+    gender: Math.random() < 0.5 ? "Female" : "Male",
+    maritalStatus: "Single",
+    children: "None",
+    typeOfResidence: "Parent's Apartment",
+  },
+  education: {
+    levelOfEducation: "B.Sc",
+    employmentStatus: "Employed",
+    sectorOfEmployment: "FinTech",
+    durationOfEmployment: "2 years",
+    officeEmail: "grace@lendsqr.com",
+    monthlyIncome: "₦200,000.00 - ₦400,000.00",
+    loanRepayment: "₦40,000",
+  },
+  socials: {
+    twitter: "@grace_effiom",
+    facebook: "Grace Effiom",
+    instagram: "@grace_effiom",
+  },
+  guarantor: {
+    fullName: "Debby Ogana",
+    phoneNumber: "07060780922",
+    email: "debby@gmail.com",
+    relationship: "Sister",
+  },
+};

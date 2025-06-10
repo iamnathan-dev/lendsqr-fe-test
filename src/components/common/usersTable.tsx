@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { useUserTable } from "../../app/hook/useUsersTable";
 import {
   Table,
@@ -46,9 +47,8 @@ import {
 import useUserStore from "@/app/(dashboard)/users/store/userStore";
 import TableHeaderCell from "./tableHeaderCell";
 import { Users as UsersType } from "@/app/action/getUsers";
-import { useRouter } from "next/navigation";
 
-const tableHeaders = [
+const TABLE_HEADERS = [
   "Organization",
   "Username",
   "Email",
@@ -57,13 +57,28 @@ const tableHeaders = [
   "Status",
 ];
 
-const cellWidths = {
+const CELL_WIDTHS = {
   organization: "116px",
   username: "106px",
   email: "147px",
   phoneNumber: "124px",
   dateJoined: "154px",
 };
+
+const STATUS_STYLES = {
+  Active: "bg-green-100 text-green-500",
+  Blacklisted: "bg-red-100 text-pink-500",
+  Pending: "bg-yellow-100 text-yellow-500",
+  default: "bg-gray-100 text-gray-500",
+};
+
+const DROPDOWN_ACTIONS = [
+  { icon: Eye, label: "View Details" },
+  { icon: UserX, label: "Blacklist User" },
+  { icon: UserCheck, label: "Activate User" },
+];
+
+const ITEMS_PER_PAGE_OPTIONS = [10, 25, 50, 100];
 
 interface User {
   organization: string;
@@ -74,69 +89,59 @@ interface User {
   status: string;
 }
 
-const statusStyles = {
-  Active: "bg-green-100 text-green-500",
-  Blacklisted: "bg-red-100 text-pink-500",
-  Pending: "bg-yellow-100 text-yellow-500",
-  default: "bg-gray-100 text-gray-500",
-};
-
-const dropdownActions = [
-  { icon: Eye, label: "View Details" },
-  { icon: UserX, label: "Blacklist User" },
-  { icon: UserCheck, label: "Activate User" },
-];
-
 const UserTable = () => {
-  const { data: users, isLoading } = useUserTable();
-  const [currentPage, setCurrentPage] = useState(1);
-  const [itemsPerPage, setItemsPerPage] = useState(10);
-  const { setUsers, filterUsers } = useUserStore();
   const router = useRouter();
-
-  const filteredUsers = filterUsers();
+  const { data: users, isLoading } = useUserTable();
+  const { setUsers, filterUsers } = useUserStore();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(ITEMS_PER_PAGE_OPTIONS[0]);
   const [localUsers, setLocalUsers] = useState<UsersType[]>([]);
 
+  const filteredUsers = filterUsers();
   const isEmpty = !isLoading && (!localUsers || localUsers.length === 0);
-
-  useEffect(() => {
-    if (users) {
-      setUsers(users);
-    }
-  }, [users, setUsers]);
-
-  useEffect(() => {
-    if (filteredUsers) {
-      setLocalUsers(filteredUsers as unknown as UsersType[]);
-    }
-  }, [filteredUsers]);
-
-  const totalPages = localUsers
-    ? Math.ceil(localUsers.length / itemsPerPage)
-    : 0;
+  const totalPages = Math.ceil((localUsers?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
   const currentUsers = localUsers?.slice(startIndex, endIndex);
 
+  useEffect(() => {
+    if (users) setUsers(users);
+  }, [users, setUsers]);
+
+  useEffect(() => {
+    if (filteredUsers) setLocalUsers(filteredUsers as unknown as UsersType[]);
+  }, [filteredUsers]);
+
   const handleStatusChange = (userId: string, action: string) => {
-    setLocalUsers((prevUsers: UsersType[]) =>
-      prevUsers.map((user) => {
-        if (user.email === userId) {
-          const statusMap: Record<string, "Active" | "Blacklisted"> = {
-            "Blacklist User": "Blacklisted",
-            "Activate User": "Active",
-          };
-          return { ...user, status: statusMap[action] || user.status };
-        }
-        return user;
-      })
+    const statusMap: Record<string, "Active" | "Blacklisted"> = {
+      "Blacklist User": "Blacklisted",
+      "Activate User": "Active",
+    };
+
+    setLocalUsers((prevUsers) =>
+      prevUsers.map((user) =>
+        user.email === userId
+          ? { ...user, status: statusMap[action] || user.status }
+          : user
+      )
     );
   };
 
   const handleItemsPerPageChange = (value: string) => {
-    const newItemsPerPage = Number(value);
-    setItemsPerPage(newItemsPerPage);
+    setItemsPerPage(Number(value));
     setCurrentPage(1);
+  };
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber);
+  };
+
+  const handleDropdownAction = (user: User, label: string) => {
+    if (label === "View Details") {
+      router.push(`/profile/${user.username}`);
+    } else {
+      handleStatusChange(user.email, label);
+    }
   };
 
   const renderEmptyState = () => (
@@ -156,7 +161,7 @@ const UserTable = () => {
       <Table>
         <TableHeader>
           <TableRow className="!border-b-0 py-4 hover:bg-transparent">
-            {tableHeaders.map((header) => (
+            {TABLE_HEADERS.map((header) => (
               <TableHeaderCell key={header} header={header} isLoading />
             ))}
           </TableRow>
@@ -167,7 +172,7 @@ const UserTable = () => {
               key={index}
               className="border-b-gray-100 hover:bg-transparent"
             >
-              {Object.entries(cellWidths).map(([key, width]) => (
+              {Object.entries(CELL_WIDTHS).map(([key, width]) => (
                 <TableCell
                   key={key}
                   className={`truncate max-w-[${width}] py-4`}
@@ -192,7 +197,7 @@ const UserTable = () => {
           <Button
             size="sm"
             variant="outline"
-            onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+            onClick={() => handlePageChange(Math.max(currentPage - 1, 1))}
             className="h-6 w-6 sm:h-8 sm:w-8 border-0 !bg-gray-200 cursor-pointer shadow-none"
           >
             <ChevronLeft className="h-3 w-3 sm:h-4 sm:w-4" />
@@ -207,35 +212,32 @@ const UserTable = () => {
           const showEllipsis =
             pageNumber === currentPage - 2 || pageNumber === currentPage + 2;
 
-          if (isVisible) {
-            return (
-              <PaginationItem key={pageNumber}>
-                <PaginationLink
-                  onClick={() => setCurrentPage(pageNumber)}
-                  isActive={currentPage === pageNumber}
-                  className={`!bg-transparent border-0 w-4 sm:w-6 text-xs sm:text-sm cursor-pointer shadow-none ${
-                    currentPage === pageNumber ? "underline" : ""
-                  }`}
-                >
-                  {pageNumber}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          } else if (showEllipsis) {
-            return (
-              <PaginationItem key={pageNumber}>
-                <PaginationEllipsis className="text-xs sm:text-sm" />
-              </PaginationItem>
-            );
-          }
-          return null;
+          if (!isVisible && !showEllipsis) return null;
+
+          return showEllipsis ? (
+            <PaginationItem key={pageNumber}>
+              <PaginationEllipsis className="text-xs sm:text-sm" />
+            </PaginationItem>
+          ) : (
+            <PaginationItem key={pageNumber}>
+              <PaginationLink
+                onClick={() => handlePageChange(pageNumber)}
+                isActive={currentPage === pageNumber}
+                className={`!bg-transparent border-0 w-4 sm:w-6 text-xs sm:text-sm cursor-pointer shadow-none ${
+                  currentPage === pageNumber ? "underline" : ""
+                }`}
+              >
+                {pageNumber}
+              </PaginationLink>
+            </PaginationItem>
+          );
         })}
         <PaginationItem>
           <Button
             variant="outline"
             size="sm"
             onClick={() =>
-              setCurrentPage((prev) => Math.min(prev + 1, totalPages))
+              handlePageChange(Math.min(currentPage + 1, totalPages))
             }
             className="h-6 w-6 sm:h-8 sm:w-8 border-0 !bg-gray-200 cursor-pointer shadow-none"
           >
@@ -252,7 +254,7 @@ const UserTable = () => {
         <Table>
           <TableHeader>
             <TableRow className="!border-b-0 py-4 hover:bg-transparent">
-              {tableHeaders.map((header) => (
+              {TABLE_HEADERS.map((header) => (
                 <TableHeaderCell key={header} header={header} />
               ))}
             </TableRow>
@@ -263,7 +265,7 @@ const UserTable = () => {
                 key={index}
                 className="border-b-gray-100 hover:bg-transparent"
               >
-                {Object.entries(cellWidths).map(([key, width]) => (
+                {Object.entries(CELL_WIDTHS).map(([key, width]) => (
                   <TableCell
                     key={key}
                     style={{ maxWidth: width }}
@@ -275,9 +277,9 @@ const UserTable = () => {
                 <TableCell>
                   <span
                     className={`px-3 py-1.5 rounded-full text-xs font-medium ${
-                      user.status in statusStyles
-                        ? statusStyles[user.status as keyof typeof statusStyles]
-                        : statusStyles.default
+                      STATUS_STYLES[
+                        user.status as keyof typeof STATUS_STYLES
+                      ] || STATUS_STYLES.default
                     }`}
                   >
                     {user.status}
@@ -292,14 +294,10 @@ const UserTable = () => {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      {dropdownActions.map(({ icon: Icon, label }) => (
+                      {DROPDOWN_ACTIONS.map(({ icon: Icon, label }) => (
                         <DropdownMenuItem
                           key={label}
-                          onClick={() =>
-                            label === "View Details"
-                              ? router.push(`/profile/${user.username}`)
-                              : handleStatusChange(user.email, label)
-                          }
+                          onClick={() => handleDropdownAction(user, label)}
                           className={`!text-custome ${workSans.className}`}
                         >
                           <Icon className="mr-2 h-4 w-4" />
@@ -329,7 +327,7 @@ const UserTable = () => {
             <SelectContent>
               <SelectGroup>
                 <SelectLabel>Entries</SelectLabel>
-                {[10, 25, 50, 100].map((value) => (
+                {ITEMS_PER_PAGE_OPTIONS.map((value) => (
                   <SelectItem key={value} value={String(value)}>
                     {value}
                   </SelectItem>
@@ -348,9 +346,7 @@ const UserTable = () => {
 
   return (
     <div className="w-full">
-      {localUsers && localUsers.length > 0 && !isEmpty
-        ? renderUserTable()
-        : renderEmptyState()}
+      {!isEmpty ? renderUserTable() : renderEmptyState()}
     </div>
   );
 };
