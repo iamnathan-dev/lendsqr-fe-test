@@ -2,7 +2,7 @@
 
 import { SIDEBAR_LINKS, workSans } from "@/lib/constants";
 import Link from "next/link";
-import React, { Suspense } from "react";
+import React, { Suspense, useEffect } from "react";
 import {
   Accordion,
   AccordionContent,
@@ -20,9 +20,27 @@ const SidebarContent = () => {
   const searchParams = useSearchParams();
   const organization = searchParams.get("organization");
   const { users } = useUserStore();
-  const { isOpen } = useSidebarStore();
+  const { isOpen, toggleSidebar } = useSidebarStore();
 
   const organizations = users.map((user) => user);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const sidebar = document.querySelector(".sidebar");
+      if (isOpen && sidebar && !sidebar.contains(event.target as Node)) {
+        toggleSidebar();
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isOpen, toggleSidebar]);
+
+  const handleLinkClick = () => {
+    if (isOpen) {
+      toggleSidebar();
+    }
+  };
 
   const sidebarClasses = `
     fixed 
@@ -83,6 +101,7 @@ const SidebarContent = () => {
                   query: { organization: org.organization },
                 }}
                 className="flex items-center gap-3 text-custome p-2 px-3 cursor-pointer"
+                onClick={handleLinkClick}
               >
                 <span className={organizationLinkClasses(org.organization)}>
                   {org.organization}
@@ -102,6 +121,7 @@ const SidebarContent = () => {
             <Link
               href={link.href || "/"}
               className={linkClasses(link.href || "/")}
+              onClick={handleLinkClick}
             >
               {link.icon}
               <span
