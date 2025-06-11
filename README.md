@@ -1,36 +1,138 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+📘 Lendsqr Frontend Assessment with Next.js
 
-## Getting Started
+This is a modern [Next.js](https://nextjs.org) project using the App Router, bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
-First, run the development server:
+## 🛠️ Tech Stack
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+- Framework: Next.js (App Router)
+- Language: TypeScript
+- Styling: SCSS, Tailwind CSS, ShadCN UI
+- State Management: Zustand, React Query
+- Data Visualization: Recharts
+- Testing: Jest
+- Component Design System: ShadCN (Radix UI + Tailwind-based)
+
+## 📁 Project Structure
+
+```
+├── app/                    # Next.js App Router pages and layouts
+│   ├── login/             # Authentication page
+│   ├── dashboard/         # Main dashboard
+│   ├── users/            # Users listing page
+│   └── profile/          # User profile pages
+├── components/            # Reusable UI components
+│   ├── ui/               # Base UI components
+│   ├── forms/            # Form-related components
+│   └── charts/           # Data visualization components
+├── lib/                   # Utility functions and configurations
+├── shared/               # Types, constants, and shared resources
+└── styles/               # Global styles and SCSS modules
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## 🚀 Getting Started
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. Install dependencies:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm install
+```
 
-## Learn More
+2. Set up environment variables:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+cp .env.example .env.local
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. Run the development server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+4. Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🧪 Running Tests
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Run unit tests
+pnpm test
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run tests in watch mode
+pnpm test:watch
+```
+
+## 📦 Build for Production
+
+```bash
+# Build the application
+pnpm build
+
+# Start production server
+pnpm start
+```
+
+## 🔧 Key Features
+
+- **Authentication**: Secure login system with validation
+- **Dashboard**: Interactive metrics and data visualization
+- **User Management**: Complete user CRUD operations
+- **Profile Management**: Detailed user profiles
+- **Responsive Design**: Mobile-first approach
+- **Performance Optimized**: Code splitting and lazy loading
+- **Type Safety**: Full TypeScript implementation
+- **Automated Testing**: Comprehensive test coverage
+
+## 🌐 API Integration
+
+The project uses React Query for API data fetching with features like:
+
+- Automatic caching
+- Background updates
+- Loading states
+- Error handling
+- Retry logic
+
+## 📚 State Management
+
+- **Zustand**: Manages local UI state (sidebar, filters, modals)
+- **React Query**: Handles server state and data fetching
+
+## 💅 Styling Architecture
+
+- Tailwind CSS for utility-first styling
+- SCSS modules for component-specific styles
+- ShadCN UI for accessible base components
+- Custom theme configuration
+
+## 🔍 Code Quality Tools
+
+- ESLint for code linting
+- Prettier for code formatting
+- Husky for pre-commit hooks
+- Jest for testing
+
+## 📖 Learn More
+
+To learn more about the tech stack:
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [TypeScript Documentation](https://www.typescriptlang.org/docs)
+- [Tailwind CSS](https://tailwindcss.com/docs)
+- [ShadCN UI](https://ui.shadcn.com)
+- [Zustand](https://github.com/pmndrs/zustand)
+- [React Query](https://tanstack.com/query)
+- [Recharts](https://recharts.org)
+
+## 🚀 Deployment
+
+Deploy on [Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme):
+
+1. Push your code to GitHub
+2. Import your repository to Vercel
+3. Configure environment variables
+4. Deploy!
+
+For more deployment options, check the [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying).
