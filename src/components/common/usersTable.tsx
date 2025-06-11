@@ -140,7 +140,12 @@ const UserTable = () => {
     }
   }, [filteredUsers, searchParams]);
 
-  const isEmpty = !isLoading && (!localUsers || localUsers.length === 0);
+  const isEmpty =
+    !isLoading &&
+    (!localUsers ||
+      localUsers.length === 0 ||
+      !filteredUsers ||
+      filteredUsers.length === 0);
   const totalPages = Math.ceil((localUsers?.length || 0) / itemsPerPage);
   const startIndex = (currentPage - 1) * itemsPerPage;
   const endIndex = startIndex + itemsPerPage;
@@ -184,7 +189,9 @@ const UserTable = () => {
         <Users strokeWidth={1} size={60} className="text-gray-500" />
         <p className="text-lg font-medium text-gray-500">No users available</p>
         <p className="text-sm text-gray-400">
-          Users will appear here once they are added to the system
+          {filteredUsers.length === 0
+            ? "No users found based on filter prompt"
+            : "Users will appear here once they are added to the system"}
         </p>
       </div>
     </div>
