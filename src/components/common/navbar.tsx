@@ -7,7 +7,7 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-import { AlignJustify, ChevronDown, Search, User } from "lucide-react";
+import { AlignJustify, ChevronDown, LogIn, Search, User } from "lucide-react";
 import Notification from "@/shared/assets/svg/notification.svg";
 import Image from "next/image";
 import Link from "next/link";
@@ -116,36 +116,47 @@ export default function Navbar() {
                 </div>
               </MenuItems>
             </Menu>
-
-            <Menu as="div" className="relative">
-              <MenuButton className="flex items-center space-x-1 cursor-pointer">
-                <div className="relative flex rounded-full bg-gray-100 p-1 text-sm outline-none">
-                  <span className="absolute -inset-1.5" />
-                  <span className="sr-only">Open user menu</span>
-                  <User strokeWidth={1} />
-                </div>
-                <span className="ml-2 text-sm hidden md:flex text-custome">
-                  <div
-                    className={`truncate max-w-[110px] font-medium ${workSans.className}`}
-                  >
-                    {userName}
+            {userName ? (
+              <Menu as="div" className="relative">
+                <MenuButton className="flex items-center space-x-1 cursor-pointer">
+                  <div className="relative flex rounded-full bg-gray-100 p-1 text-sm outline-none">
+                    <span className="absolute -inset-1.5" />
+                    <span className="sr-only">Open user menu</span>
+                    <User strokeWidth={1} />
                   </div>
-                  <ChevronDown strokeWidth={1} className="inline size-4" />
-                </span>
-              </MenuButton>
-              <MenuItems
-                transition
-                className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
-              >
-                {menuItems.map((item, index) => (
-                  <MenuItem key={index}>
-                    <Link href={item.href} className={commonLinkStyles}>
-                      {item.text}
-                    </Link>
-                  </MenuItem>
-                ))}
-              </MenuItems>
-            </Menu>
+                  <span className="ml-2 text-sm hidden md:flex text-custome">
+                    <div
+                      className={`truncate max-w-[110px] font-medium ${workSans.className}`}
+                    >
+                      {userName}
+                    </div>
+                    <ChevronDown strokeWidth={1} className="inline size-4" />
+                  </span>
+                </MenuButton>
+                <MenuItems
+                  transition
+                  className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 transition focus:outline-hidden data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                >
+                  {menuItems.map((item, index) => (
+                    <MenuItem key={index}>
+                      <Link href={item.href} className={commonLinkStyles}>
+                        {item.text}
+                      </Link>
+                    </MenuItem>
+                  ))}
+                </MenuItems>
+              </Menu>
+            ) : (
+              <Link href="/login">
+                <Button
+                  variant={"link"}
+                  className="cursor-pointer !text-custome"
+                >
+                  <LogIn />
+                  <span className="md:block hidden">Login</span>
+                </Button>
+              </Link>
+            )}{" "}
           </div>
         </div>
       </div>
